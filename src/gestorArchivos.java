@@ -60,7 +60,7 @@ public class gestorArchivos {
                 outputStream = new PrintWriter(new FileOutputStream(path + fileName + ".txt", true));
                 outputStream.print("");
                 outputStream.close();
-                System.out.println("Se creó el  archivo: " + f.getName());
+                System.out.println("Se creó el archivo: " + f.getName());
             } else {
                 System.out.println("Ya existe el archivo: " + f.getName());
             }

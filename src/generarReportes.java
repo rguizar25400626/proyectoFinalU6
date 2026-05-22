@@ -22,7 +22,7 @@ public class generarReportes {
         try {
 
             outputStream = new PrintWriter(new FileOutputStream(fileName, true));
-            System.out.println(fileName);
+
             outputStream.println("=====================");
             for (int i = 1; i < lineas.length; i++) {
                 outputStream.println(lineas[i]);
@@ -34,6 +34,32 @@ public class generarReportes {
             System.out.println("Excepción tipo :" + e.getClass().getSimpleName());
 
         }
+
+    }
+
+    public static ArrayList<String[]> leerTextoCSV(String filename) {
+        String linea;
+        File archivo = new File(filename);
+        ArrayList<String[]> a = new ArrayList();
+
+        try {
+            FileReader leer = new FileReader(archivo);
+            BufferedReader buffer = new BufferedReader(leer);
+            linea = buffer.readLine();
+            while (linea != null) {
+                a.add(linea.split(","));
+
+                linea = buffer.readLine();
+            }
+
+            buffer.close();
+
+        } catch (IOException e) {
+            System.out.println("Excepcion Tipo :" + e.getClass().getSimpleName());
+            e.printStackTrace();
+        }
+
+        return a;
 
     }
 
@@ -52,32 +78,6 @@ public class generarReportes {
         }
 
         construirReporte(lineas, archivoDestino);
-    }
-
-    public static ArrayList<String[]> leerTextoCSV(String filename) {
-        String linea;
-        File archivo = new File(filename);
-        ArrayList<String[]> a = new ArrayList();
-
-        try {
-            FileReader leer = new FileReader(archivo);
-            BufferedReader buffer = new BufferedReader(leer);
-            linea = buffer.readLine();
-            while (linea != null) {
-                a.add(linea.split(","));
-                System.out.println(linea);
-                linea = buffer.readLine();
-            }
-
-            buffer.close();
-
-        } catch (IOException e) {
-            System.out.println("Excepcion Tipo :" + e.getClass().getSimpleName());
-            e.printStackTrace();
-        }
-
-        return a;
-
     }
 
     public static void generarConsumosAltos(String archivoOrigen, String archivoDestino) {
@@ -131,8 +131,7 @@ public class generarReportes {
                 + "Total a pagar: " + totalAPagar + "\n"
                 + "Promedio de pago por apartamento: " + promedio + "\n"
                 + "Mayor consumo: " + mayorConsumoComparar + ", del apartamento " + mayorConsumo;
-                
-        
+
         lineas[1] = renglon;
 
         construirReporte(lineas, archivoDestino);
