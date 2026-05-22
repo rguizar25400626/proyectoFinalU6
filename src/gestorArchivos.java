@@ -75,7 +75,32 @@ public class gestorArchivos {
 
         }
     }
+    
+     public void crearArchivo() {
 
+        f = new File(path + fileName);
+
+        try {
+            if (!f.exists()) {
+                outputStream = new PrintWriter(new FileOutputStream(path + fileName + ".txt", true));
+                outputStream.print("");
+                outputStream.close();
+                System.out.println("Se creó el archivo: " + f.getName());
+            } else {
+                System.out.println("Ya existe el archivo: " + f.getName());
+            }
+        } catch (Exception e) {
+            try {
+                crearDirectorio(path);
+                crearArchivoTXT();
+            } catch (Exception ex) {
+                System.out.println("Excepción del tipo: " + ex.getClass().getSimpleName());
+                e.printStackTrace();
+            }
+
+        }
+    }
+     
     private void crearDirectorio(String carpeta) {
         File folder = new File(carpeta);
 

@@ -34,8 +34,8 @@ public class Main {
         generarReportes.generarDatosGenerales(rutarelativa + nombre + ".csv", rutarelativa + "reporte_consumos_general.txt");
 
         generarReportes.generarConsumosAltos(rutarelativa + nombre + ".csv", rutarelativa + "reporte_consumos_altos.txt");
-        
-         generarReportes.generarResumenAgua(rutarelativa + nombre + ".csv", rutarelativa + "reporte_resumen_agua.txt");
+
+        generarReportes.generarResumenAgua(rutarelativa + nombre + ".csv", rutarelativa + "reporte_resumen_agua.txt");
 
     }
 }

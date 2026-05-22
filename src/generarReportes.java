@@ -16,12 +16,11 @@ import java.util.Scanner;
 public class generarReportes {
 
     public static void construirReporte(String[] lineas, String fileName) {
-
         PrintWriter outputStream;
 
         try {
 
-            outputStream = new PrintWriter(new FileOutputStream(fileName, true));
+            outputStream = new PrintWriter(new FileOutputStream(fileName, false));
 
             outputStream.println("=====================");
             for (int i = 1; i < lineas.length; i++) {
@@ -37,17 +36,24 @@ public class generarReportes {
 
     }
 
-    public static ArrayList<String[]> leerTextoCSV(String filename) {
+    public static String[] leerTextoCSV(String filename) {
         String linea;
+        int tamanoArreglo = 0;
         File archivo = new File(filename);
-        ArrayList<String[]> a = new ArrayList();
+        String[] a = null;
 
         try {
             FileReader leer = new FileReader(archivo);
             BufferedReader buffer = new BufferedReader(leer);
             linea = buffer.readLine();
             while (linea != null) {
-                a.add(linea.split(","));
+                tamanoArreglo++;
+            }
+
+            a = new String[tamanoArreglo];
+
+            for (int i = 0; i < tamanoArreglo; i++) {
+                a[i] = linea = buffer.readLine();
 
                 linea = buffer.readLine();
             }
@@ -64,13 +70,14 @@ public class generarReportes {
     }
 
     public static void generarDatosGenerales(String archivoOrigen, String archivoDestino) {
-        ArrayList<String[]> datosCSV = leerTextoCSV(archivoOrigen);
-        String lineas[] = new String[datosCSV.size()];
-        for (int i = 1; i < datosCSV.size(); i++) {
-            String renglon = "Departamento: " + datosCSV.get(i)[0]
-                    + ", Mes: " + datosCSV.get(i)[2]
-                    + ", Consumo: " + (Float.parseFloat(datosCSV.get(i)[4]) - Float.parseFloat(datosCSV.get(i)[3]))
-                    + ", Importe a pagar: " + (Float.parseFloat(datosCSV.get(i)[4]) - Float.parseFloat(datosCSV.get(i)[3])) * Float.parseFloat(datosCSV.get(i)[5])
+        String[] datosCSV = leerTextoCSV(archivoOrigen);
+        String lineas[] = null;
+        for (int i = 1; i < datosCSV.length; i++) {
+            lineas = datosCSV[i].split(",");
+            String renglon = "Departamento: " + lineas[0]
+                    + ", Mes: " + lineas[2]
+                    + ", Consumo: " + (Float.parseFloat(lineas[4]) - Float.parseFloat(lineas[3]))
+                    + ", Importe a pagar: " + (Float.parseFloat(lineas[4]) - Float.parseFloat(lineas[3])) * Float.parseFloat(lineas[5])
                     + "\n";
 
             lineas[i] = renglon;
@@ -81,15 +88,15 @@ public class generarReportes {
     }
 
     public static void generarConsumosAltos(String archivoOrigen, String archivoDestino) {
-        ArrayList<String[]> datosCSV = leerTextoCSV(archivoOrigen);
+        String[] datosCSV = leerTextoCSV(archivoOrigen);
         String lineas[] = new String[2];
         lineas[1] = "";
-        for (int i = 1; i < datosCSV.size(); i++) {
+        for (int i = 1; i < datosCSV.length; i++) {
             String renglon;
-            float consumom3 = (Float.parseFloat(datosCSV.get(i)[4]) - Float.parseFloat(datosCSV.get(i)[3]));
+            float consumom3 = (Float.parseFloat(lineas[4]) - Float.parseFloat(lineas[3]));
 
             if (consumom3 > 25) {
-                renglon = "El apartamento " + (datosCSV.get(i)[0]) + " tiene un consumo alto de agua (" + consumom3 + " metros cúbicos)\n";
+                renglon = "El apartamento " + (lineas[0]) + " tiene un consumo alto de agua (" + consumom3 + " metros cúbicos)\n";
                 lineas[1] += renglon;
             }
 
@@ -107,7 +114,7 @@ public class generarReportes {
 
     public static void generarResumenAgua(String archivoOrigen, String archivoDestino) {
 
-        ArrayList<String[]> datosCSV = leerTextoCSV(archivoOrigen);
+        String[] datosCSV = leerTextoCSV(archivoOrigen);
         String lineas[] = new String[2];
         float totalAPagar = 0f;
         float promedio = 0f;
@@ -115,14 +122,14 @@ public class generarReportes {
         float mayorConsumoComparar = 0f;
         String mayorConsumo = "";
         String renglon = "";
-        for (int i = 1; i < datosCSV.size(); i++) {
-            totalAPagar += (Float.parseFloat(datosCSV.get(i)[4]) - Float.parseFloat(datosCSV.get(i)[3])) * Float.parseFloat(datosCSV.get(i)[5]);
-            totalConsumo += (Float.parseFloat(datosCSV.get(i)[4]) - Float.parseFloat(datosCSV.get(i)[3]));
-            promedio = totalAPagar / datosCSV.size();
+        for (int i = 1; i < datosCSV.length; i++) {
+            totalAPagar += (Float.parseFloat(datosCSV[4]) - Float.parseFloat(datosCSV[3])) * Float.parseFloat(datosCSV[5]);
+            totalConsumo += (Float.parseFloat(datosCSV[4]) - Float.parseFloat(datosCSV[3]));
+            promedio = totalAPagar / datosCSV.length;
 
-            if ((Float.parseFloat(datosCSV.get(i)[4]) - Float.parseFloat(datosCSV.get(i)[3])) > mayorConsumoComparar) {
-                mayorConsumo = (datosCSV.get(i)[0]);
-                mayorConsumoComparar = (Float.parseFloat(datosCSV.get(i)[4]) - Float.parseFloat(datosCSV.get(i)[3]));
+            if ((Float.parseFloat(datosCSV[4]) - Float.parseFloat(datosCSV[3])) > mayorConsumoComparar) {
+                mayorConsumo = (datosCSV[0]);
+                mayorConsumoComparar = (Float.parseFloat(datosCSV[4]) - Float.parseFloat(datosCSV[3]));
 
             }
         }

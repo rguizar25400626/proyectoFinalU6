@@ -19,22 +19,33 @@ public class guardarInformacionCSV {
 
     public void agregarRegistro(consumoMensual[] cm, String filename) {
         PrintWriter outputStream;
-        for (int i = 0; i < cm.length; i++) {
-            try {
-                verificarConsumo(cm[i]);
+        gestorArchivos ga = new gestorArchivos("DEPTO,RESPONSABLE,MES,LECTURA_ANTERIOR,LECTURA_ACTUAL,TARIFA_M3", "c:\\users\\nappe\\documents\\gestorAguaProyectoU6\\", "consumos_agua");
+
+        try {
+
+            File f = new File(filename);
+            f.delete();
+
+            ga.crearArchivoCSV();
+
+            for (int i = 0; i < cm.length; i++) {
                 try {
-                    String renglon = cm[i].transformarRenglon();
-                    outputStream = new PrintWriter(new FileOutputStream(filename, true));
-                    outputStream.println(renglon);
-                    outputStream.close();
+                    verificarConsumo(cm[i]);
+                    try {
+                        String renglon = cm[i].transformarRenglon();
+                        outputStream = new PrintWriter(new FileOutputStream(filename, true));
+                        outputStream.println(renglon);
+                        outputStream.close();
 
-                } catch (FileNotFoundException e) {
-                    System.out.println("Excepcion tipo :" + e.getClass().getSimpleName());
+                    } catch (FileNotFoundException e) {
+                        System.out.println("Excepcion tipo :" + e.getClass().getSimpleName());
 
+                    }
+                } catch (consumoAnteriorMayorException e) {
                 }
-            } catch (consumoAnteriorMayorException e) {
-            }
 
+            }
+        } catch (Exception e) {
         }
     }
 
